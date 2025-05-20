@@ -55,9 +55,9 @@ const KakaoMap = ({ onAddZone }) => {
           margin: "0 auto",
           width: "120vw",
           maxWidth: "800px",
-          height: "180vw",
-          maxHeight: "210vh",
-          minHeight: "800px",
+          height: "120vw",
+          maxHeight: "180vh",
+          minHeight: "600px",
           borderRadius: "12px",
           boxShadow: "0 2px 8px rgba(0,0,0,0.07)",
         }}

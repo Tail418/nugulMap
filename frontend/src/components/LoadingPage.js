@@ -18,11 +18,11 @@ const LoadingPage = () => {
 
   return (
     <div className="loading-container">
-      <img 
+      {/* <img 
         src="./logo.jpg" // 로고 이미지
         alt="Logo" 
         className="loading-logo" 
-      />
+      /> */}
       <img 
         src="./너구리.gif" // 로고 이미지
         alt="Logo" 

@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { getAddress } from "./getAddress";
+import KakaoMap from "./KakaoMap";
+import MenuBar from "./MenuBar";
 
 const MainPage = () => {
   const [smokingZones, setSmokingZones] = useState([
@@ -8,9 +10,10 @@ const MainPage = () => {
     { name: "흡연구역", lat: 37.64992559411937, lng: 127.06300401143832 },
   ]);
   const [address, setAddress] = useState(""); // 주소 입력값 상태
-  const [clickedAddress, setClickedAddress] = useState(""); // 클릭한 위치의 주소
+  const [clickedLatLng, setClickedLatLng] = useState(null); // 클릭한 위치의 위경도
   const mapRef = useRef(null);
   const markersRef = useRef([]);
+  const clickMarkerRef = useRef(null); // 클릭 마커 ref
 
   useEffect(() => {
     // 카카오맵 API 로드
@@ -23,7 +26,7 @@ const MainPage = () => {
       window.kakao.maps.load(() => {
         const container = document.getElementById("map");
         const options = {
-          center: new window.kakao.maps.LatLng(37.648841453089, 127.064317548529), // 시작 중심 좌표
+          center: new window.kakao.maps.LatLng(37.648841453089, 127.064317548529),
           level: 2,
         };
         const map = new window.kakao.maps.Map(container, options);
@@ -33,15 +36,18 @@ const MainPage = () => {
         // 지도 클릭 이벤트 등록
         window.kakao.maps.event.addListener(map, "click", function(mouseEvent) {
           const latlng = mouseEvent.latLng;
-          const geocoder = new window.kakao.maps.services.Geocoder();
-          geocoder.coord2Address(latlng.getLng(), latlng.getLat(), function(result, status) {
-            if (status === window.kakao.maps.services.Status.OK) {
-              const addr = result[0].address.address_name;
-              setClickedAddress(addr);
-            } else {
-              setClickedAddress("주소를 찾을 수 없습니다.");
-            }
-          });
+          setClickedLatLng({ lat: latlng.getLat(), lng: latlng.getLng() });
+
+          // 클릭 마커가 이미 있으면 위치만 옮기고, 없으면 새로 생성
+          if (!clickMarkerRef.current) {
+            clickMarkerRef.current = new window.kakao.maps.Marker({
+              position: latlng,
+              map: map,
+            });
+          } else {
+            clickMarkerRef.current.setPosition(latlng);
+            clickMarkerRef.current.setMap(map);
+          }
         });
       });
     };
@@ -50,6 +56,10 @@ const MainPage = () => {
       script.remove();
       markersRef.current.forEach(marker => marker.setMap(null));
       markersRef.current = [];
+      if (clickMarkerRef.current) {
+        clickMarkerRef.current.setMap(null);
+        clickMarkerRef.current = null;
+      }
     };
     // eslint-disable-next-line
   }, []);
@@ -98,30 +108,27 @@ const MainPage = () => {
     });
   }
 
+  // 흡연구역 추가 버튼 클릭 시 동작 (원하면 DB 저장 등 구현)
+  const handleAddZoneFromMap = (latlng) => {
+    alert(`흡연구역 추가: 위도 ${latlng.lat}, 경도 ${latlng.lng}`);
+    // 여기에 DB 저장 로직 추가 가능
+  };
+
   return (
-    <div>
-      <h1 style={{ textAlign: "center", margin: "20px 0" }}>Neogul Map</h1>
-      
-      <div id="map" style={{ margin: "0 auto", width: "50%", height: "80vh" }} />
-      <div style={{ textAlign: "center", marginTop: "10px", color: "#333" }}>
-        {clickedAddress && (
-          <div>
-            <b>클릭한 위치 주소:</b> {clickedAddress}
-          </div>
-        )}
-      </div>
-      <div style={{ textAlign: "center", marginBottom: "10px" }}>
-        <input
-          type="text"
-          value={address}
-          onChange={e => setAddress(e.target.value)}
-          placeholder="주소를 입력하세요"
-          style={{ width: "300px", padding: "8px" }}
-        />
-        <button onClick={handleAddZone} style={{ marginLeft: "8px", padding: "8px 16px" }}>
-          흡연구역 추가
-        </button>
-      </div>
+    <div style={{background: "#a1977c"/* 메뉴바 높이만큼 여백 */ }}>
+      <img
+        src={require("../assets/neogulmap-title.jpg")}
+        alt="Neogul Map"
+        style={{
+          display: "block",
+          margin: "6px auto 5px auto",
+          maxWidth: "35vw",
+          width: "200px",
+          height: "auto",
+        }}
+      />
+      <KakaoMap onAddZone={handleAddZoneFromMap} />
+      <MenuBar />
     </div>
   );
 };

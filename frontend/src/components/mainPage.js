@@ -123,7 +123,7 @@ const MainPage = () => {
           display: "block",
           margin: "6px auto 5px auto",
           maxWidth: "35vw",
-          width: "200px",
+          width: "400px",
           height: "auto",
         }}
       />

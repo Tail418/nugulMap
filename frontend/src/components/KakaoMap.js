@@ -53,8 +53,8 @@ const KakaoMap = ({ onAddZone }) => {
         id="map"
         style={{
           margin: "0 auto",
-          width: "120vw",
-          maxWidth: "800px",
+          width: "100%",
+          maxWidth: "100%",
           height: "120vw",
           maxHeight: "180vh",
           minHeight: "600px",

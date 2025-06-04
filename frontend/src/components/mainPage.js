@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { getAddress } from "./getAddress";
 import KakaoMap from "./KakaoMap";
-import MenuBar from "./MenuBar";
+
 
 const MainPage = () => {
   const [smokingZones, setSmokingZones] = useState([
@@ -71,21 +71,6 @@ const MainPage = () => {
     // eslint-disable-next-line
   }, [smokingZones]);
 
-  // 주소 입력 후 버튼 클릭 시 실행되는 함수
-  const handleAddZone = async () => {
-    if (!address.trim()) return;
-    try {
-      const newCoords = await getAddress(address);
-      setSmokingZones((zones) => [
-        ...zones,
-        { name: "새로운 흡연구역", ...newCoords },
-      ]);
-      setAddress(""); // 입력창 초기화
-    } catch (error) {
-      alert("주소 검색 실패: " + error.message);
-    }
-  };
-
   function drawMarkers(zones) {
     markersRef.current.forEach(marker => marker.setMap(null));
     markersRef.current = [];
@@ -115,20 +100,8 @@ const MainPage = () => {
   };
 
   return (
-    <div style={{background: "#a1977c"/* 메뉴바 높이만큼 여백 */ }}>
-      <img
-        src={require("../assets/neogulmap-title.jpg")}
-        alt="Neogul Map"
-        style={{
-          display: "block",
-          margin: "6px auto 5px auto",
-          maxWidth: "35vw",
-          width: "400px",
-          height: "auto",
-        }}
-      />
+    <div>
       <KakaoMap onAddZone={handleAddZoneFromMap} />
-      <MenuBar />
     </div>
   );
 };

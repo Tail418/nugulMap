@@ -140,48 +140,7 @@ const KakaoMap = ({ onAddZone }) => {
           </div>
         </div>
       )}
-      {clickedLatLng && (
-        <div
-          style={{
-            textAlign: "center",
-            marginTop: "16px",
-            background: "#fff8f0",
-            borderRadius: "8px",
-            padding: "16px",
-            width: "90vw",
-            maxWidth: "600px",
-            marginLeft: "auto",
-            marginRight: "auto",
-            boxShadow: "0 2px 8px rgba(0,0,0,0.07)",
-            fontSize: "clamp(14px, 3vw, 18px)",
-          }}
-        >
-          <div style={{ marginBottom: "8px", color: "#6d4c2f" }}>
-            <b>위도:</b> {clickedLatLng.lat} <br />
-            <b>경도:</b> {clickedLatLng.lng}
-          </div>
-          <button
-            style={{
-              padding: "10px 24px",
-              background: "#8B5C2A",
-              color: "#fff",
-              border: "none",
-              borderRadius: "4px",
-              cursor: "pointer",
-              fontSize: "clamp(15px, 4vw, 18px)",
-              width: "100%",
-              maxWidth: "300px",
-            }}
-            onClick={() => {
-              if (onAddZone) {
-                onAddZone(clickedLatLng);
-              }
-            }}
-          >
-            흡연구역 추가하기
-          </button>
-        </div>
-      )}
+      
     </div>
   );
 };

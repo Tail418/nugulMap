@@ -96,25 +96,55 @@ export const MapContainer = forwardRef<MapContainerRef>((props, ref) => {
       return
     }
 
-    if (typeof window === "undefined" || !mapRef.current) return
+    if (typeof window === "undefined" || !mapRef.current) {
+      console.log("[v0] Window or mapRef not ready")
+      return
+    }
 
+    console.log("[v0] Starting to load Kakao Maps script...")
     const script = document.createElement("script")
     script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_APP_KEY}&autoload=false`
     script.async = true
     document.head.appendChild(script)
 
     script.onload = () => {
+      console.log("[v0] Kakao Maps script loaded successfully")
+      console.log("[v0] window.kakao exists:", !!window.kakao)
+      console.log("[v0] window.kakao.maps exists:", !!window.kakao?.maps)
+
+      if (!window.kakao || !window.kakao.maps) {
+        console.error("[v0] Kakao Maps SDK not properly loaded")
+        setError("카카오맵 SDK가 제대로 로드되지 않았습니다.")
+        return
+      }
+
       window.kakao.maps.load(() => {
-        const options = {
-          center: new window.kakao.maps.LatLng(37.5665, 126.978),
-          level: 3,
+        console.log("[v0] Kakao Maps load callback triggered")
+        console.log("[v0] mapRef.current exists:", !!mapRef.current)
+
+        if (!mapRef.current) {
+          console.error("[v0] Map container element not found")
+          return
         }
-        const map = new window.kakao.maps.Map(mapRef.current!, options)
-        setMapInstance(map)
+
+        try {
+          const options = {
+            center: new window.kakao.maps.LatLng(37.5665, 126.978),
+            level: 3,
+          }
+          console.log("[v0] Creating map with options:", options)
+          const map = new window.kakao.maps.Map(mapRef.current!, options)
+          console.log("[v0] Map created successfully:", !!map)
+          setMapInstance(map)
+        } catch (error) {
+          console.error("[v0] Error creating map:", error)
+          setError("지도 생성 중 오류가 발생했습니다.")
+        }
       })
     }
 
-    script.onerror = () => {
+    script.onerror = (error) => {
+      console.error("[v0] Kakao Maps script failed to load:", error)
       setError("카카오맵 SDK 로드에 실패했습니다.")
     }
 

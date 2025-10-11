@@ -148,7 +148,7 @@ export const MapContainer = forwardRef<MapContainerRef>((props, ref) => {
       console.error("[v0] Kakao Maps script failed to load:", error)
       const currentDomain = window.location.origin
       setError(
-        `카카오맵 로드 실패: 카카오 개발자 콘솔에서 현재 도메인(${currentDomain})을 등록해주세요. developers.kakao.com → 앱 설정 → 플랫폼 → Web 플랫폼 설정 → 사이트 도메인 추가`,
+        `카카오맵 스크립트 로드 실패\n\n현재 도메인: ${currentDomain}\n\n해결 방법:\n1. developers.kakao.com 접속\n2. 내 애플리케이션 선택\n3. 앱 설정 → 플랫폼 → Web 플랫폼 설정\n4. 사이트 도메인에 "${currentDomain}" 추가\n5. 페이지 새로고침`,
       )
     }
 

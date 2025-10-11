@@ -136,6 +136,7 @@ export const MapContainer = forwardRef<MapContainerRef>((props, ref) => {
           const map = new window.kakao.maps.Map(mapRef.current!, options)
           console.log("[v0] Map created successfully:", !!map)
           setMapInstance(map)
+          setError(null)
         } catch (error) {
           console.error("[v0] Error creating map:", error)
           setError("지도 생성 중 오류가 발생했습니다.")
@@ -145,7 +146,10 @@ export const MapContainer = forwardRef<MapContainerRef>((props, ref) => {
 
     script.onerror = (error) => {
       console.error("[v0] Kakao Maps script failed to load:", error)
-      setError("카카오맵 SDK 로드에 실패했습니다.")
+      const currentDomain = window.location.origin
+      setError(
+        `카카오맵 로드 실패: 카카오 개발자 콘솔에서 현재 도메인(${currentDomain})을 등록해주세요. developers.kakao.com → 앱 설정 → 플랫폼 → Web 플랫폼 설정 → 사이트 도메인 추가`,
+      )
     }
 
     return () => {
@@ -269,8 +273,9 @@ export const MapContainer = forwardRef<MapContainerRef>((props, ref) => {
       )}
 
       {error && (
-        <div className="absolute top-4 left-4 right-4 bg-red-500/10 border border-red-500/20 text-red-100 p-3 rounded-md z-20">
-          {error}
+        <div className="absolute top-4 left-4 right-4 bg-red-500/20 border-2 border-red-500/40 text-red-100 p-4 rounded-lg z-20 backdrop-blur-sm">
+          <div className="font-semibold mb-2">오류 발생</div>
+          <div className="text-sm leading-relaxed">{error}</div>
         </div>
       )}
 

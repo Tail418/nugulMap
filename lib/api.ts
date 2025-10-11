@@ -1,4 +1,4 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080"
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"
 
 export interface ZoneRequest {
   region: string
@@ -72,7 +72,7 @@ class ApiService {
       formData.append("image", imageFile)
     }
 
-    return this.request<ZoneResponse>("/zones", {
+    return this.request<ZoneResponse>("/api/zones", {
       method: "POST",
       headers: {}, // Let browser set Content-Type for FormData
       body: formData,
@@ -80,7 +80,7 @@ class ApiService {
   }
 
   async getAllZones(latitude?: number, longitude?: number, radius?: number): Promise<ZoneResponse[]> {
-    let endpoint = "/zones"
+    let endpoint = "/api/zones"
     const params = new URLSearchParams()
 
     if (latitude !== undefined) params.append("latitude", latitude.toString())
@@ -95,7 +95,7 @@ class ApiService {
   }
 
   async getZone(id: number): Promise<ZoneResponse> {
-    return this.request<ZoneResponse>(`/zones/${id}`)
+    return this.request<ZoneResponse>(`/api/zones/${id}`)
   }
 
   async updateZone(id: number, zoneData: ZoneRequest, imageFile?: File): Promise<ZoneResponse> {
@@ -105,7 +105,7 @@ class ApiService {
       formData.append("image", imageFile)
     }
 
-    return this.request<ZoneResponse>(`/zones/${id}`, {
+    return this.request<ZoneResponse>(`/api/zones/${id}`, {
       method: "PUT",
       headers: {}, // Let browser set Content-Type for FormData
       body: formData,
@@ -113,17 +113,17 @@ class ApiService {
   }
 
   async deleteZone(id: number): Promise<void> {
-    return this.request<void>(`/zones/${id}`, {
+    return this.request<void>(`/api/zones/${id}`, {
       method: "DELETE",
     })
   }
 
   async getCurrentUser(): Promise<UserResponse> {
-    return this.request<UserResponse>("/users/me")
+    return this.request<UserResponse>("/api/users/me")
   }
 
   async updateUserNickname(nickname: string): Promise<UserResponse> {
-    return this.request<UserResponse>("/users/me/nickname", {
+    return this.request<UserResponse>("/api/users/me/nickname", {
       method: "PUT",
       body: JSON.stringify({ nickname }),
     })
@@ -133,7 +133,7 @@ class ApiService {
     const formData = new FormData()
     formData.append("image", imageFile)
 
-    return this.request<UserResponse>("/users/me/profile-image", {
+    return this.request<UserResponse>("/api/users/me/profile-image", {
       method: "PUT",
       headers: {}, // Let browser set Content-Type for FormData
       body: formData,
@@ -141,7 +141,7 @@ class ApiService {
   }
 
   async deleteCurrentUser(): Promise<void> {
-    return this.request<void>("/users/me", {
+    return this.request<void>("/api/users/me", {
       method: "DELETE",
     })
   }

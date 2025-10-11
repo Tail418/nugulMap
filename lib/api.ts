@@ -1,4 +1,4 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080"
 
 export interface ZoneRequest {
   region: string
@@ -42,7 +42,7 @@ class ApiService {
   }
 
   private async request<T>(endpoint: string, options?: RequestInit): Promise<T> {
-    const url = `${API_BASE_URL}/api${endpoint}`
+    const url = `${API_BASE_URL}${endpoint}`
     const authToken = this.getAuthToken()
 
     const response = await fetch(url, {

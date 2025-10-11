@@ -79,8 +79,19 @@ export const MapContainer = forwardRef<MapContainerRef>((props, ref) => {
 
   useEffect(() => {
     const KAKAO_APP_KEY = process.env.NEXT_PUBLIC_KAKAOMAP_APIKEY
+
+    console.log("[v0] Checking Kakao API key...")
+    console.log("[v0] API key exists:", !!KAKAO_APP_KEY)
+    console.log("[v0] API key length:", KAKAO_APP_KEY?.length || 0)
+    console.log("[v0] First 10 chars:", KAKAO_APP_KEY?.substring(0, 10) || "none")
+
     if (!KAKAO_APP_KEY) {
-      console.error("카카오맵 API 키가 설정되지 않았습니다.")
+      console.error("[v0] 카카오맵 API 키가 설정되지 않았습니다.")
+      console.error("[v0] 환경 변수 이름: NEXT_PUBLIC_KAKAOMAP_APIKEY")
+      console.error(
+        "[v0] 현재 환경 변수들:",
+        Object.keys(process.env).filter((key) => key.startsWith("NEXT_PUBLIC")),
+      )
       setError("카카오맵 API 키가 설정되지 않았습니다.")
       return
     }
